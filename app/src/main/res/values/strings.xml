@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CDT</string>
+    <string name="take_a_pomodoro">Take a Pomodoro</string>
+    <string name="Timer">25:00</string>
+    <string name="start">Start</string>
+    <string name="rest"><u>Reset</u></string>
+</resources>
