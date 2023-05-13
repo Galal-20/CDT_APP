@@ -4,13 +4,10 @@ import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import java.text.Format
-import java.util.Objects
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
         B1.setOnClickListener {
             if (!isTimerRun) {
-                startTimer()
+                startTimer(Start_Time_In_Milli.toLong())
                 t1.text = "Keep going..."
             }
         }
@@ -47,8 +44,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun startTimer() {
-         timer = object : CountDownTimer(Start_Time_In_Milli.toLong(), 1 * 1000) {
+    private fun startTimer(startTime : Long) {
+         timer = object : CountDownTimer(startTime, 1 * 1000) {
             override fun onTick(timerLeft: Long) {
                 remainingTime = timerLeft.toInt()
                 updateTimerText()
@@ -63,11 +60,12 @@ class MainActivity : AppCompatActivity() {
         isTimerRun = true
     }
 
+    @SuppressLint("SetTextI18n")
     private fun resetTimer(){
         timer?.cancel()
         remainingTime = Start_Time_In_Milli
         updateTimerText()
-        t1.text = "Take Promodoro"
+        t1.text = "Take Pomodoro"
         isTimerRun = false
         progressBar.progress = 100
     }
@@ -77,6 +75,20 @@ class MainActivity : AppCompatActivity() {
         val second = remainingTime.div(1000)% 60
         val formattedTime = String.format("%02d:%02d" , minute , second)
         t2.text = formattedTime
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putLong("remaining Time" , remainingTime.toLong())
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        val savedTime = savedInstanceState.getLong("remaining Time")
+
+        if (savedTime  != Start_Time_In_Milli.toLong())
+            startTimer(savedTime)
     }
 }
 
